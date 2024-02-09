@@ -1,0 +1,24 @@
+{
+  "name": "twocents",
+  "version": "1.0.0",
+  "description": "An API for a social networking platform where people can give their 2 cents",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index",
+    "start": "node index.js",
+    "seed": "node utils/seed"
+  },
+  "dependencies": {
+    "express": "4.17.1",
+    "mongoose": "7.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "2.0.9"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+
+}
