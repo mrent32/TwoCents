@@ -1,7 +1,8 @@
-import { connect, connection } from 'mongoose';
+import pkg from 'mongoose';
+const { connect, connection } = pkg
 
 const connectionString = 'mongodb://127.0.0.1:27017/studentsDB';
 
-connect(connectionString);
 
-export default connection
+
+export default connect(connectionString);
