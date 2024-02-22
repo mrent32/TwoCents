@@ -26,6 +26,7 @@ const ThoughtController = {
         try {
             const newThought = await Thought.create(req.body)
             res.json(newThought)
+            console.log('logging out', newThought)
         } catch (err) {
             res.status(500).json(err)
         }
@@ -51,6 +52,33 @@ const ThoughtController = {
         } catch (err) {
             res.status(500).json(err)
         }
+    },
+
+    async createReaction(req, res) {
+        try {
+            const newReaction = await Thought.findOneAndUpdate(
+            {_id: req.params.thoughtId},
+            {$addToSet: {reactions: req.body}},
+            {runValidators: true, new: true}
+            )
+            newReaction ? res.json(newReaction) : res.status(404).json({message: 'not found'})
+        } catch (err) {
+            res.status(500).json(err)
+        }
+    },
+
+    async deleteReaction(req, res) {
+        try {
+          const thought = await Thought.findOneAndUpdate(
+              {_id: req.params.thoughtId},
+              {$pull: {reactions: {reactionId: req.params.reactionId}}},
+              {runValidators: true, new: true}
+          );
+  
+          thought ? res.json(thought) : res.status(404).json({message: notFound});
+      } catch (e) {
+          res.status(500).json(e);
+      }
     },
 };
 

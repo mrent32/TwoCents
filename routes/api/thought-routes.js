@@ -9,13 +9,15 @@ const {getAllThoughts,
       postThought,
        deleteThought,
         updatedThought,
+        createReaction,
+        deleteReaction,
 } = ThoughtController
 router.route('/').get(getAllThoughts).post(postThought);
 
 router.route('/:thoughtId').get(getThoughtsById).put(updatedThought).delete(deleteThought);
 
-// router.route('/:thoughtId/reactions').post(createReaction);
+router.route('/:thoughtId/reactions').post(createReaction);
 
-// router.route('/:thoughtId/reactions/:reactionId').delete(deleteReaction);
+router.route('/:thoughtId/reactions/:reactionId').delete(deleteReaction);
 
 export default router
