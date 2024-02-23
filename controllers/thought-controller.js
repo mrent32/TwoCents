@@ -25,7 +25,8 @@ const ThoughtController = {
     async postThought(req, res) {
         try {
             const newThought = await Thought.create(req.body)
-            res.json(newThought)
+            const updatedUser = await User.findOneAndUpdate({_id:req.body.userId}, {$push:{thoughts: newThought._id}})
+            res.json(updatedUser)
             console.log('logging out', newThought)
         } catch (err) {
             res.status(500).json(err)
@@ -34,6 +35,7 @@ const ThoughtController = {
     async deleteThought(req, res) {
         try {
             const deletedThought = await Thought.findByIdAndDelete({_id: req.params.thoughtId})
+            const updatedUser = await User.findOneAndUpdate({thoughts:req.params.thoughtId}, {$pull: {thoughts: req.params.thoughtId}}, {new: true})
             res.status(200).json(deletedThought)
         } catch (err) {
             res.status(500).json(err)

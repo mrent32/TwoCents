@@ -1,10 +1,10 @@
-import { User } from '../models/index.js';
+import { User, Thought } from '../models/index.js';
 
 
 const UserController = {
     
 getAllUsers(req, res) {
-    User.find({})
+    User.find({}).populate('friends').populate('thoughts')
     .then(userData => res.json(userData))
     .catch(err => res.status(500).json(err))
 },
@@ -33,8 +33,9 @@ updateUserById(req, res) {
 deleteUserById(req, res) {
     User.findOneAndDelete(req.params.id)
     .then(userData => {
-      !userData ? res.json(404).json({message: 'user not found'})
-      : res.json({message: 'user successfully deleted'})
+        Thought.deleteMany({_id: { $in : userData.thoughts}})
+        !userData ? res.json(404).json({message: 'user not found'})
+        : res.json({message: 'user successfully deleted'})
     })
     .catch(err => res.status(500).json(err))
 },
@@ -42,7 +43,7 @@ deleteUserById(req, res) {
 addFriend(req, res) {
     User.findOneAndUpdate(
         { _id: req.params.userId},
-        { $addToSet: {friends: req.body.friendId || req.params.friendId  } },
+        { $addToSet: {friends: {_id:req.params.friendId}  } },
         { new: true }
     )
     .then(userData => {
@@ -54,7 +55,7 @@ addFriend(req, res) {
 
 removeFriend({ params }, res ) {
     User.findOneAndUpdate(
-        { _id: req.params.userId },
+        { _id: params.userId },
         { $pull: { friends: params.friendId}},
         { new: true}
     )
