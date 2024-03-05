@@ -26,6 +26,9 @@ const ThoughtController = {
         try {
             const newThought = await Thought.create(req.body)
             const updatedUser = await User.findOneAndUpdate({_id:req.body.userId}, {$push:{thoughts: newThought._id}})
+            if( !updatedUser) {
+                return res.status(404).json({message: 'no user found'})
+            }
             res.json(updatedUser)
             console.log('logging out', newThought)
         } catch (err) {
@@ -44,9 +47,9 @@ const ThoughtController = {
     async updatedThought(req, res) {
         try {
             const updatedThought = await Thought.findOneAndUpdate(
-                {_id: req.params.thoughtId},
-                {$set: req.body},
-                {runValidators: true, new: true }
+                { _id: req.params.thoughtId },
+                { $set: req.body },
+                { runValidators: true, new: true }
             )
             return !Thought 
             ? res.status(404).json({message: 'no thought with that id'})
@@ -77,7 +80,7 @@ const ThoughtController = {
               {runValidators: true, new: true}
           );
   
-          thought ? res.json(thought) : res.status(404).json({message: notFound});
+          !thought ? res.status(404).json({message: 'notFound' }) : res.json(thought);
       } catch (e) {
           res.status(500).json(e);
       }
